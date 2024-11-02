@@ -81,7 +81,7 @@ class GestorUsuarios:
     @staticmethod
     def busqueda_secuencial(usuarios, username):
         for usuario in usuarios:
-            if usuario.username == username: 
+            if Usuario.username == username: 
                 print(usuario)
             else:
                 print("Usuario no encontrado")

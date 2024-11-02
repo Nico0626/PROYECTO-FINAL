@@ -22,7 +22,7 @@ def login():
 
     if usuario and Usuario.password == password:
         print("Ingreso exitoso.")
-        Acceso.guardar_acceso(Acceso(usuario.username))
+        Acceso.guardar_acceso(Acceso(Usuario.username))
 
         while True:
             logo()
