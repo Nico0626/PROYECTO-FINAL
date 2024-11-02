@@ -5,10 +5,10 @@ class Usuario:
     next_id = 1
 
     def __init__(self, username, password, email):
-        self._id = Usuario.next_id
-        self._username = username
-        self._password = password
-        self._email = email
+        self.__id = Usuario.next_id
+        self.__username = username
+        self.__password = password
+        self.__email = email
         Usuario.next_id += 1
 
     def __repr__(self):
@@ -100,7 +100,7 @@ class Usuario:
     def buscar_usuario(cls, criterio):
         usuarios = cls.traer_usuarios()
         for usuario in usuarios:
-            if cls.username == criterio or cls.email == criterio:
+            if usuario.username == criterio or usuario.email == criterio:
                 return usuario
         print("Usuario no encontrado.")
         return None

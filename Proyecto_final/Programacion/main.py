@@ -1,7 +1,7 @@
 from gestor_usuarios import GestorUsuarios
 from acceso import Acceso
 import time
-"""from colorama import Fore, Style"""
+from colorama import Fore, Style
 from usuario import Usuario
 import RegistrosPluviales
 import captcha
@@ -15,11 +15,13 @@ def login():
     username = input("Usuario: ")
     captcha.resolver_captcha()
     password = input("Contraseña: ")
+
+    # Busca al usuario por nombre de usuario o email
     usuario = Usuario.buscar_usuario(username)
 
-    if usuario and usuario._password == password:
+    if usuario and usuario.password == password:
         print("Ingreso exitoso.")
-        Acceso.guardar_acceso(Acceso(usuario._username))
+        Acceso.guardar_acceso(Acceso(usuario.username))
 
         while True:
             logo()
@@ -31,11 +33,11 @@ def login():
             if opcion == "1":
                 menu_base_datos()
             elif opcion == "2":
-                print("Cerrando sesion...")
-                menu_principal()
+                print("Cerrando sesión y regresando al menú principal...")
+                return  # Salir del login y regresar al menú principal
             elif opcion == "3":
                 print("Cerrando programa...")
-                break
+                exit()
             else:
                 print("Opción no válida. Intente de nuevo.")
     else:
@@ -60,6 +62,14 @@ def menu_principal():
             menu_usuarios()
         elif opcion == "3":
             RegistrosPluviales.main()
+            while True:
+                print("1. Ingresar otro año")
+                print("2. Volver al menú principal")
+                opcion = input("Seleccione una opción: ")
+                if opcion == "1":
+                    RegistrosPluviales()
+                elif opcion == "2":
+                    menu_principal()
         elif opcion == "4":
             break
         else:
@@ -119,7 +129,7 @@ def accesos():
         opcion = input("Seleccione una opción: ")
 
         if opcion == "1":
-            Acceso.guardar_acceso()
+            Acceso.guardar_acceso()  # Aquí puede que necesites ajustar según tu implementación
         elif opcion == "2":
             pass  # Implementar función para mostrar logs fallidos
         elif opcion == "3":
@@ -174,18 +184,18 @@ def menu_base_datos():
     while True:
         logo()
         print("\n*** GESTOR BASE DE DATOS ***")
-        print("1. Modificar tabla")
-        print("2. Mostrar tabla")
-        print("3. Eliminar tabla")
-        print("4. Volver al menú principal")
+        print("1. Crear base de datos")
+        print("2. Crear tablas")
+        print("3. Realizar consultas")
+        print("4. Volver al menú anterior")
         opcion = input("Seleccione una opción: ")
 
         if opcion == "1":
-            pass  # Implementar función de modificación de tabla
+            pass  # Implementar creación de base de datos
         elif opcion == "2":
-            pass  # Implementar función de mostrar tabla
+            pass  # Implementar creación de tablas
         elif opcion == "3":
-            pass  # Implementar función de eliminación de tabla
+            pass  # Implementar realización de consultas
         elif opcion == "4":
             break
         else:

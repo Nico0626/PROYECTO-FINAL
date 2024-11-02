@@ -38,7 +38,7 @@ class GestorUsuarios:
         n = len(usuarios)
         for i in range(n):
             for j in range(0, n - i - 1):
-                if usuarios[j].username > usuarios[j + 1].username:
+                if usuarios[j].username > Usuario[j + 1].username:
                     usuarios[j], usuarios[j + 1] = usuarios[j + 1], usuarios[j]
         Usuario.guardar_usuarios(usuarios)
         cls.usuarios_ordenados = True  # Actualiza la variable de clase
@@ -47,7 +47,7 @@ class GestorUsuarios:
     @classmethod
     def ordenar_usuarios_python(cls):
         usuarios = Usuario.traer_usuarios()
-        usuarios.sort(key=lambda usuario: usuario.username)
+        usuarios.sort(key=lambda usuario: Usuario.username)
         Usuario.guardar_usuarios(usuarios)
         cls.usuarios_ordenados = True  # Actualiza la variable de clase
         print("Usuarios ordenados usando sort() de Python y guardados en usuarios.ispc.")
@@ -65,7 +65,7 @@ class GestorUsuarios:
     @staticmethod
     def busqueda_secuencial(usuarios, username):
         for usuario in usuarios:
-            if usuario.username == username: 
+            if Usuario.username == username: 
                 print(usuario)
             else:
                 print("Usuario no encontrado")
