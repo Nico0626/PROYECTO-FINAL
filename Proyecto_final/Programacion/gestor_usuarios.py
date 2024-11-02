@@ -3,7 +3,7 @@ import captcha
 
 
 class GestorUsuarios:
-    usuarios_ordenados = False  # Variable de clase
+    usuarios_ordenados = False # Variable de clase
 
     @staticmethod
     def agregar_usuario():
@@ -11,7 +11,8 @@ class GestorUsuarios:
         captcha.resolver_captcha()
         password = input("Ingrese la contraseña: ")
         email = input("Ingrese el correo: ")
-        Usuario.crear_usuario(username, password, email)
+        dni = int(input("Ingrese su dni: "))
+        Usuario.crear_usuario(username, password, email, dni)
 
     @staticmethod
     def modificar_usuario():
@@ -19,6 +20,7 @@ class GestorUsuarios:
         username = input("Nuevo username (deje en blanco para no cambiar): ")
         password = input("Nueva contraseña (deje en blanco para no cambiar): ")
         email = input("Nuevo email (deje en blanco para no cambiar): ")
+        dni = int(input("Nuevo dni (deje en blanco para no cambiar): "))
         Usuario.modificar_usuario(user_id, username or None, password or None, email or None)
 
     @staticmethod
@@ -38,19 +40,33 @@ class GestorUsuarios:
         n = len(usuarios)
         for i in range(n):
             for j in range(0, n - i - 1):
-                if usuarios[j].username > Usuario[j + 1].username:
+                if usuarios[j].username > usuarios[j + 1].username:
                     usuarios[j], usuarios[j + 1] = usuarios[j + 1], usuarios[j]
         Usuario.guardar_usuarios(usuarios)
         cls.usuarios_ordenados = True  # Actualiza la variable de clase
         print("Usuarios ordenados por burbuja y guardados en usuarios.ispc.")
+        for usuario in usuarios:
+            print(usuario)
+            
 
     @classmethod
     def ordenar_usuarios_python(cls):
         usuarios = Usuario.traer_usuarios()
-        usuarios.sort(key=lambda usuario: Usuario.username)
-        Usuario.guardar_usuarios(usuarios)
+        usuarios.sort(key=lambda usuario: usuario.username)
         cls.usuarios_ordenados = True  # Actualiza la variable de clase
+        Usuario.guardar_usuarios(usuarios)
         print("Usuarios ordenados usando sort() de Python y guardados en usuarios.ispc.")
+        print(usuarios)
+        
+    @classmethod
+    def ordenar_usuario_dni(cls):
+        usuarios = Usuario.traer_usuarios()
+        usuarios.sort(key=lambda usuario: usuario.dni)
+        cls.usuarios_ordenados = True  # Actualiza la variable de clase
+        Usuario.guardar_usuarios(usuarios)
+        print("Usuarios ordenados por dni y guardados en usuarios.ispc.")
+        for usuario in usuarios:
+            print(usuario)
 
     @classmethod
     def buscar_usuario(cls, username):
@@ -65,7 +81,7 @@ class GestorUsuarios:
     @staticmethod
     def busqueda_secuencial(usuarios, username):
         for usuario in usuarios:
-            if Usuario.username == username: 
+            if usuario.username == username: 
                 print(usuario)
             else:
                 print("Usuario no encontrado")
@@ -82,3 +98,5 @@ class GestorUsuarios:
             else:
                 derecha = medio - 1
                 print("Usuario no encontrado")
+    
+        
