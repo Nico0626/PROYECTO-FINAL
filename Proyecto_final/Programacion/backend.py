@@ -59,7 +59,7 @@ class Conexiondb:
             self.connection.close()
             print("Conexión cerrada.")
 
-conexion = Conexiondb('localhost', 'root', 'valeria11', 'libreria')
+conexion = Conexiondb('localhost', 'root', 'contraseña', 'libreria')
 
 def menu_baseDatos():
     while True:
@@ -198,4 +198,4 @@ def eliminar_registro():
     
     conexion.close()
 
-menu_baseDatos()
+
