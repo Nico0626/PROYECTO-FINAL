@@ -1,12 +1,8 @@
 import mysql.connector
 from mysql.connector import Error
 
-
 class Conexiondb:
     def __init__(self, host, user, password, database):
-        """
-        Inicializa los parámetros de la conexión a la base de datos.
-        """
         self.host = host
         self.user = user
         self.password = password
@@ -14,9 +10,6 @@ class Conexiondb:
         self.connection = None
 
     def conectar(self):
-        """
-        Conecta con la base de datos.
-        """
         try:
             self.connection = mysql.connector.connect(
                 host=self.host,
@@ -26,129 +19,183 @@ class Conexiondb:
             )
             if self.connection.is_connected():
                 print("Conexión exitosa")
+                return True
         except Error as e:
             print(f"Error al conectar a la base de datos: {e}")
             self.connection = None
-            
+            return False
+
     def execute_query(self, query, params=None):
-        """
-        Ejecuta una consulta en la base de datos.
-        """
         if self.connection is None:
             print("No hay conexión con la base de datos.")
             return None
 
         try:
-            with self.connection.cursor() as cursor:
-                if params:
-                    cursor.execute(query, params)
-                else:
-                    cursor.execute(query)
+            cursor = self.connection.cursor(dictionary=True)
+            if params:
+                cursor.execute(query, params)
+            else:
+                cursor.execute(query)
 
-                # Si la consulta es de tipo SELECT, intentamos consumir todos los resultados
-                if query.strip().lower().startswith("select"):
-                    resultados = cursor.fetchall()
-                    if resultados:
-                        print("Resultados obtenidos:")
-                        for fila in resultados:
-                            print(fila)
-                        return resultados
-                    else:
-                        print("No se encontraron resultados.")
+            if query.strip().lower().startswith("select"):
+                resultados = cursor.fetchall()
+                cursor.close()
+                if resultados:
+                    print("Resultados obtenidos:")
+                    for fila in resultados:
+                        print(fila)
+                    return resultados
                 else:
-                    # Para consultas como INSERT, UPDATE, DELETE
-                    self.connection.commit()
-                    print("Consulta ejecutada exitosamente.")
+                    print("No se encontraron resultados.")
+            else:
+                self.connection.commit()
+                cursor.close()
+                print("Consulta ejecutada exitosamente.")
         except Error as e:
             print(f"Error al ejecutar la consulta: {e}")
-            return None
-    
-    
+
     def close(self):
-        """
-        Cierra la conexión a la base de datos.
-        """
         if self.connection and self.connection.is_connected():
             self.connection.close()
-            print("Conexión cerrada.")    
+            print("Conexión cerrada.")
 
-conexion = Conexiondb('localhost','root','NM260621','libreria')
+conexion = Conexiondb('localhost', 'root', 'valeria11', 'libreria')
+
+def menu_baseDatos():
+    while True:
+        print("\nMenu de Base de Datos:")
+        print("1. Ver tablas disponibles.")
+        print("2. Insertar un nuevo registro.")
+        print("3. Actualizar un registro.")
+        print("4. Eliminar un registro.")
+        print("5. Consultar registros de una tabla.")
+        print("6. Salir.")
+        
+        opcion = int(input("Seleccione una opción: "))
+
+        if opcion == 1:
+            mostrar_tablas()
+        elif opcion == 2:
+            insertar_registro()
+        elif opcion == 3:
+            actualizar_registro()
+        elif opcion == 4:
+            eliminar_registro()
+        elif opcion == 5:
+            consultar_todos_registros()
+        elif opcion == 6:
+            print("Saliendo del menú de base de datos.")
+            break
+        else:
+            print("Opción inválida. Intente nuevamente.")
+
+def mostrar_tablas():
+    conexion.conectar()
+    query = "SHOW TABLES"
+    tablas = conexion.execute_query(query)
+    if tablas:
+        print("Tablas disponibles:")
+        for tabla in tablas:
+            print(tabla['Tables_in_libreria'])
+    conexion.close()
+
+def consultar_todos_registros():
+    conexion.conectar()
+    tabla = input("Ingrese el nombre de la tabla a consultar: ")
+    query = f"SELECT * FROM {tabla}"
+    conexion.execute_query(query)
+    conexion.close()
+    
+def insertar_registro():
+    conexion.conectar()
+    print("Tablas disponibles para inserción: usuario, libros, venta, detalle_venta")
+    tabla = input("Seleccione la tabla para insertar un registro: ").strip().lower()
+
+    if tabla == "usuario":
+        nombre = input("Ingrese el nombre: ")
+        email = input("Ingrese el email: ")
+        telefono = input("Ingrese el teléfono (opcional): ")
+        query = "INSERT INTO usuario (nombre, email, telefono) VALUES (%s, %s, %s)"
+        conexion.execute_query(query, (nombre, email, telefono if telefono else None))
+
+    elif tabla == "libros":
+        titulo = input("Ingrese el título: ")
+        autor = input("Ingrese el autor: ")
+        precio = float(input("Ingrese el precio: "))
+        stock = int(input("Ingrese el stock: "))
+        fecha_publicacion = input("Ingrese la fecha de publicación (YYYY-MM-DD): ")
+        genero = input("Ingrese el género: ")
+        query = "INSERT INTO libros (titulo, autor, precio, stock, fecha_publicacion, genero) VALUES (%s, %s, %s, %s, %s, %s)"
+        conexion.execute_query(query, (titulo, autor, precio, stock, fecha_publicacion, genero))
+        conexion.close()
+
+    elif tabla == "venta":
+        id_usuario = int(input("Ingrese el ID del usuario: "))
+        total = float(input("Ingrese el total de la venta: "))
+        query = "INSERT INTO venta (id_usuario, total) VALUES (%s, %s)"
+        conexion.execute_query(query, (id_usuario, total))
+        conexion.close()
 
 
-conexion.conectar()
-conexion.execute_query('SELECT * FROM libros')
+    elif tabla == "detalle_venta":
+        id_venta = int(input("Ingrese el ID de la venta: "))
+        id_libro = int(input("Ingrese el ID del libro: "))
+        cantidad = int(input("Ingrese la cantidad: "))
+        precio_unitario = float(input("Ingrese el precio unitario: "))
+        query = "INSERT INTO detalle_venta (id_venta, id_libro, cantidad, precio_unitario) VALUES (%s, %s, %s, %s)"
+        conexion.execute_query(query, (id_venta, id_libro, cantidad, precio_unitario))
+        conexion.close()
 
-conexion.execute_query('''
-SELECT v.id_venta, v.fecha_venta, v.total, u.nombre
-FROM venta v
-JOIN usuario u ON v.id_usuario = u.id_usuario
-WHERE v.fecha_venta BETWEEN '2024-01-01' AND '2024-12-31'
-''')
+    else:
+        print("Tabla no válida.")
+    
+    conexion.close()
 
-conexion.execute_query('''
-CREATE TRIGGER actualizar_stock_venta AFTER INSERT ON detalle_venta
-FOR EACH ROW
-BEGIN
-  UPDATE libros
-  SET stock = stock - NEW.cantidad
-  WHERE id_libro = NEW.id_libro;
-END;
-''')
+def actualizar_registro():
+    conexion.conectar()
+    print("Tablas disponibles para actualización: usuario, libros")
+    tabla = input("Seleccione la tabla para actualizar un registro: ").strip().lower()
 
+    if tabla == "usuario":
+        id_usuario = int(input("Ingrese el ID del usuario a actualizar: "))
+        nuevo_nombre = input("Ingrese el nuevo nombre: ")
+        nuevo_email = input("Ingrese el nuevo email: ")
+        nuevo_telefono = input("Ingrese el nuevo teléfono (opcional): ")
+        query = "UPDATE usuario SET nombre = %s, email = %s, telefono = %s WHERE id_usuario = %s"
+        conexion.execute_query(query, (nuevo_nombre, nuevo_email, nuevo_telefono if nuevo_telefono else None, id_usuario))
 
-conexion.execute_query('''
-CREATE TRIGGER restaurar_stock_venta AFTER DELETE ON detalle_venta
-FOR EACH ROW
-BEGIN
-  UPDATE libros
-  SET stock = stock + OLD.cantidad
-  WHERE id_libro = OLD.id_libro;
-END
-''')
+    elif tabla == "libros":
+        id_libro = int(input("Ingrese el ID del libro a actualizar: "))
+        nuevo_titulo = input("Ingrese el nuevo título: ")
+        nuevo_autor = input("Ingrese el nuevo autor: ")
+        nuevo_precio = float(input("Ingrese el nuevo precio: "))
+        nuevo_stock = int(input("Ingrese el nuevo stock: "))
+        query = "UPDATE libros SET titulo = %s, autor = %s, precio = %s, stock = %s WHERE id_libro = %s"
+        conexion.execute_query(query, (nuevo_titulo, nuevo_autor, nuevo_precio, nuevo_stock, id_libro))
 
-conexion.execute_query('''
-INSERT INTO libros (titulo, autor, precio, stock, fecha_publicacion, genero)
-VALUES (%s, %s, %s, %s, %s, %s)
-''', ('Nuevo Libro', 'Autor Famoso', 19.99, 10, '2024-01-01', 'Ficción'))
+    else:
+        print("Tabla no válida o función incompleta.")
+    
+    conexion.close()
 
-conexion.execute_query('''
-UPDATE libros
-SET stock = stock + %s
-WHERE id_libro = %s
-''', (5, 1)) 
+def eliminar_registro():
+    conexion.conectar()
+    print("Tablas disponibles para eliminación: usuario, libros")
+    tabla = input("Seleccione la tabla para eliminar un registro: ").strip().lower()
 
-conexion.execute_query('''
-UPDATE libros
-SET stock = 0
-WHERE id_libro = %s
-''', (1,))
+    if tabla == "usuario":
+        id_usuario = int(input("Ingrese el ID del usuario a eliminar: "))
+        query = "DELETE FROM usuario WHERE id_usuario = %s"
+        conexion.execute_query(query, (id_usuario,))
 
-#Consulta de Ventas por Usuario Específico (incluyendo el total de cada venta
-conexion.execute_query('''
-SELECT v.id_venta, v.fecha_venta, v.total, GROUP_CONCAT(l.titulo SEPARATOR ', ') AS libros_comprados
-FROM venta v
-JOIN detalle_venta dv ON v.id_venta = dv.id_venta
-JOIN libros l ON dv.id_libro = l.id_libro
-WHERE v.id_usuario = %s
-GROUP BY v.id_venta, v.fecha_venta, v.total
-ORDER BY v.fecha_venta DESC
-''', (1,))
+    elif tabla == "libros":
+        id_libro = int(input("Ingrese el ID del libro a eliminar: "))
+        query = "DELETE FROM libros WHERE id_libro = %s"
+        conexion.execute_query(query, (id_libro,))
 
- def read(self, tabla):
-        try:
-            cone = Conexiondb('localhost', 'root', 'NM260621', 'ARGBroker')
-            cone.conectar()
-            cursor = cone.connection.cursor()
-            sql = "SELECT * FROM %s"
-            cursor.execute(sql, (tabla))
-            row = cursor.fetchone()
-            if row:
-                return tabla(*row)
-            return None
-        except mysql.connector.Error as error:
-            print("Error al conectar a la base de datos: {}".format(error))
-        finally:
-            if cursor:
-                cursor.close()
-            if cone.connection:
-                cone.close()
+    else:
+        print("Tabla no válida o función incompleta.")
+    
+    conexion.close()
+
+menu_baseDatos()
