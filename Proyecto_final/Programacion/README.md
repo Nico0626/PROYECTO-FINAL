@@ -1,6 +1,5 @@
 TSUNDOKU
-TSUNDOKU esta diseñado para gestionar una librería, permitiendo a los usuarios interactuar con el sistema sin necesidad de conocimientos previos en programación. ((((ver si alguien la puede probar para saber si es facil e intuitiva!!!)))
-
+TSUNDOKU esta diseñado para gestionar una librería, permitiendo a los usuarios interactuar con el sistema sin necesidad de conocimientos previos en programación.
 Archivos del Proyecto
 main.py: Archivo principal que gestiona la interfaz de usuario, incluyendo la bienvenida, el inicio de sesión, el registro de usuarios, la verificación de captchas y el registro de actividades en archivos de texto.
 
