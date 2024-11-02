@@ -158,25 +158,49 @@ def ordenamiento():
         else:
             print("Opción no válida. Intente de nuevo.")
 
-def mostrar_usuario():
+
+def menu_principal():
     while True:
+        print("\n*** Menú Principal ***")
         logo()
-        print("1. Búsqueda de Usuarios por DNI")
-        print("2. Búsqueda de Usuarios por username")
-        print("3. Buscar por email")
-        print("4. Mostrar todos los usuarios")
+        print("1. Agregar un nuevo usuario")
+        print("2. Modificar un usuario")
+        print("3. Eliminar un usuario")
+        print("4. Buscar usuario")
+        print("5. Mostrar todos los usuarios")
+        print("6. Ordenar usuarios Burbuja")
+        print("7. Ordenar usuarios paython")
+        print("8. Ordenar usuarios por dni")
+        print("9. Salir")
         opcion = input("Seleccione una opción: ")
 
         if opcion == "1":
-            pass  # Implementar búsqueda por DNI
+            GestorUsuarios.agregar_usuario()
         elif opcion == "2":
-            pass  # Implementar búsqueda por username
+            GestorUsuarios.modificar_usuario()
         elif opcion == "3":
-            pass  # Implementar búsqueda por email
+            GestorUsuarios.eliminar_usuario()
         elif opcion == "4":
+            user=input("Ingrese el usuario a encontrar: ")
+            GestorUsuarios.buscar_usuario(user)
+        elif opcion == "5":
             GestorUsuarios.mostrar_usuarios()
+
+        elif opcion == "6":
+            GestorUsuarios.ordenar_usuarios_burbuja()
+
+        elif opcion == "7":
+            GestorUsuarios.ordenar_usuarios_python()
+        
+        elif opcion == "8":
+            GestorUsuarios.ordenar_usuario_dni()
+
+
+        elif opcion == "9":
+            print("Saliendo del sistema.")
+            break
         else:
-            print("Opción no válida. Intente de nuevo.")
+            print("Opción inválida, intente nuevamente.")
 
 ####################### Menú de Base de Datos ########################
 
