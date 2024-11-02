@@ -51,14 +51,19 @@ def login():
 def menu_principal():
     while True:
         logo()
-        print("1. Ingresar al sistema con los datos de usuario")
-        print("2. Registros pluviales")
-        print("3. Cerrar programa")
+        print("1. Usuarios y Accesos de la Aplicación")
+        print("2. Ingresar al sistema con los datos de usuario")
+
+        print("3. Registros pluviales")
+        print("4. Cerrar programa")
         opcion = input("Seleccione una opción: ")
 
-        if opcion == "1":
-            login()
+        if opcion=="1":
+            menu_usuarios()
+
         elif opcion == "2":
+            login()
+        elif opcion == "3":
             RegistrosPluviales.main()
             while True:
                 print("1. Ingresar otro año")
@@ -68,7 +73,7 @@ def menu_principal():
                     RegistrosPluviales()
                 elif opcion == "2":
                     menu_principal()
-        elif opcion == "3":
+        elif opcion == "4":
             break
         else:
             print("Opción no válida. Intente de nuevo.")
@@ -106,7 +111,7 @@ def accesos():
         opcion = input("Seleccione una opción: ")
 
         if opcion == "1":
-            Acceso.guardar_acceso()  # Aquí puede que necesites ajustar según tu implementación
+            Acceso.mostrar_accesos()  # Aquí puede que necesites ajustar según tu implementación
         elif opcion == "2":
             pass  # Implementar función para mostrar logs fallidos
         elif opcion == "3":
