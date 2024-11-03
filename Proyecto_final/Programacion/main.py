@@ -20,9 +20,9 @@ def login():
     # Busca al usuario por nombre de usuario o email
     usuario = Usuario.buscar_usuario(username)
 
-    if usuario and Usuario.password == password:
+    if usuario and usuario.password == password:
         print("Ingreso exitoso.")
-        Acceso.guardar_acceso(Acceso(Usuario.username))
+        Acceso.guardar_acceso(Acceso(usuario.username))
 
         while True:
             logo()
