@@ -59,7 +59,7 @@ Para el correcto funcionamiento de **TSUNDOKU**, es necesario contar con las sig
 ## Instalación
 1. Clona el repositorio de **TSUNDOKU** en tu máquina local:
     ```bash
-    git clone https://github.com/tu_usuario/tsundoku.git
+    git clone https://github.com/Nico0626/PROYECTO-FINAL.git
     ```
 2. Ejecuta los scripts `libreria.sql` y `Queries.sql` para crear y poblar la base de datos en MySQL.
 3. Abre el archivo `main.py` en Visual Studio Code.
