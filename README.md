@@ -25,7 +25,6 @@ Desarrollar un sistema de gestión de librerías que permita el registro y contr
 
 ### Archivos Principales
 - **main.py**: Archivo principal que gestiona la interfaz de usuario, incluyendo bienvenida, inicio de sesión, registro de usuarios, verificación de captchas y registro de actividades en archivos de texto.
-- **menu2.py**: Gestiona las opciones del menú principal y la navegación en la aplicación.
 - **captcha.py**: Genera captchas basados en operaciones matemáticas aleatorias para validar que el usuario no sea un bot.
 - **aritmetica.py**: Contiene funciones para operaciones aritméticas básicas (suma, resta, multiplicación, división) y cálculos de suma y promedio.
 - **acceso.py**: Gestiona el acceso y la autenticación de usuarios, definiendo la clase Acceso, que almacena información de cada sesión.
